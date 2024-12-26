@@ -1,6 +1,6 @@
 {
-    "name": "ten_second_challenge",
-    "short_name": "ten_second_challenge",
+    "name": "10秒チャレンジ",
+    "short_name": "10秒チャレンジ",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,0 +1,4 @@
+{
+    "dart.flutterShowEmulators": "always",
+    "dart.flutterShowWebServerDevice": "always"
+}
