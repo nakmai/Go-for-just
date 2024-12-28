@@ -1,3 +1,4 @@
+import 'package:namer_app/performance_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
@@ -26,8 +27,19 @@ class TimerState extends ChangeNotifier {
   int _milliseconds = 0;
   bool _isRunning = false;
 
+  // 成績データ
+  int _totalPlays = 0;
+  int _totalPerfect = 0;
+  int _totalSuccess = 0;
+  int _totalFails = 0;
+
   int get milliseconds => _milliseconds;
   bool get isRunning => _isRunning;
+
+  int get totalPlays => _totalPlays;
+  int get totalPerfect => _totalPerfect;
+  int get totalSuccess => _totalSuccess;
+  int get totalFails => _totalFails;
 
   void startTimer() {
     if (_isRunning) return;
@@ -38,10 +50,26 @@ class TimerState extends ChangeNotifier {
     });
   }
 
-  void stopTimer() {
+  void stopTimer(int targetSeconds) {
     if (!_isRunning) return;
     _isRunning = false;
     _timer?.cancel();
+
+    double elapsedSeconds = _milliseconds / 1000.0;
+    _totalPlays++; // 総プレイ回数を増加
+
+    // 成績の判定
+    const successThreshold = 0.15;
+    const perfectThreshold = 0.01;
+
+    if ((elapsedSeconds - targetSeconds).abs() <= perfectThreshold) {
+      _totalPerfect++;
+    } else if ((elapsedSeconds - targetSeconds).abs() <= successThreshold) {
+      _totalSuccess++;
+    } else {
+      _totalFails++;
+    }
+
     notifyListeners();
   }
 
@@ -70,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (!_isTimerStopped || elapsedSeconds == 0.0) return '';
 
     if ((elapsedSeconds - _targetSeconds).abs() <= perfectThreshold) {
-      return '🎊大成功🎊';
+      return '🎊 大 成 功 🎊';
     } else if ((elapsedSeconds - _targetSeconds).abs() <= successThreshold) {
       return '成功!';
     } else {
@@ -219,7 +247,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   onTap: () {
                     Navigator.of(context).pop(); // ダイアログを閉じる
-                    // 成績の処理をここに追加
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PerformancePage()),
+                    );
                   },
                 ),
                 const Divider(),
@@ -231,7 +263,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   onTap: () {
                     Navigator.of(context).pop(); // ダイアログを閉じる
-                    // 履歴の処理をここに追加
                   },
                 ),
                 const Divider(),
@@ -371,7 +402,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (timerState.isRunning) {
-                        timerState.stopTimer();
+                        timerState.stopTimer(_targetSeconds);
                         setState(() {
                           _isTimerStopped = true;
                         });

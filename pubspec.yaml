@@ -31,6 +31,7 @@ flutter:
   assets:
     - assets/app_icon.png
     - assets/setting_icon.png
+    - assets/left_arrow_icon.png
   fonts:
     - family: CustomBoldFont
       fonts:
