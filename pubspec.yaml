@@ -30,3 +30,10 @@ flutter_icons:
 flutter:
   assets:
     - assets/app_icon.png
+    - assets/setting_icon.png
+  fonts:
+    - family: CustomBoldFont
+      fonts:
+        - asset: assets/fonts/ipag.ttc
+
+

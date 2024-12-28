@@ -1,111 +1,458 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-// アプリケーションのエントリーポイント
-// StatelessWidgetを使ってアプリ全体の構造を定義
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      // TimerStateをプロバイダとしてアプリ全体に提供
       create: (context) => TimerState(),
       child: MaterialApp(
-        title: '10秒チャレンジ',
-        theme: ThemeData(
-          // Material 3 デザインを有効化し、色を設定
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
-        ),
-        // ホーム画面としてMyHomePageを設定
+        title: '目指せベスト',
+        theme: ThemeData(),
         home: MyHomePage(),
       ),
     );
   }
 }
 
-// タイマーの状態管理クラス
 class TimerState extends ChangeNotifier {
-  Timer? _timer; // 定期実行するTimerのインスタンス
-  int _milliseconds = 0; // 経過時間をミリ秒単位で記録
-  bool _isRunning = false; // タイマーが動作中かどうかを示す
+  Timer? _timer;
+  int _milliseconds = 0;
+  bool _isRunning = false;
 
-  int get milliseconds => _milliseconds; // 現在の経過時間を取得
-  bool get isRunning => _isRunning; // タイマーの動作状態を取得
+  int get milliseconds => _milliseconds;
+  bool get isRunning => _isRunning;
 
-  // タイマーを開始するメソッド
   void startTimer() {
-    if (_isRunning) return; // 既に動作中なら何もしない
-    _isRunning = true; // 動作中フラグをセット
-    // 10ミリ秒ごとに経過時間を増加
+    if (_isRunning) return;
+    _isRunning = true;
     _timer = Timer.periodic(Duration(milliseconds: 10), (timer) {
       _milliseconds += 10;
-      notifyListeners(); // 状態が変わったことを通知
+      notifyListeners();
     });
   }
 
-  // タイマーを停止するメソッド
   void stopTimer() {
-    if (!_isRunning) return; // 動作中でなければ何もしない
-    _isRunning = false; // 動作中フラグを解除
-    _timer?.cancel(); // タイマーをキャンセル
-    notifyListeners(); // 状態が変わったことを通知
+    if (!_isRunning) return;
+    _isRunning = false;
+    _timer?.cancel();
+    notifyListeners();
   }
 
-  // タイマーをリセットするメソッド
   void resetTimer() {
-    _isRunning = false; // 動作中フラグを解除
-    _timer?.cancel(); // タイマーをキャンセル
-    _milliseconds = 0; // 経過時間をリセット
-    notifyListeners(); // 状態が変わったことを通知
+    _isRunning = false;
+    _timer?.cancel();
+    _milliseconds = 0;
+    notifyListeners();
   }
 }
 
-// ホーム画面のUIを定義
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  int _targetSeconds = 10;
+  bool _isTimeVisible = true;
+  bool _isTimerStopped = true;
+
+  String _getResultText(double elapsedSeconds) {
+    const successThreshold = 0.15;
+    const perfectThreshold = 0.01;
+
+    if (!_isTimerStopped || elapsedSeconds == 0.0) return '';
+
+    if ((elapsedSeconds - _targetSeconds).abs() <= perfectThreshold) {
+      return '🎊大成功🎊';
+    } else if ((elapsedSeconds - _targetSeconds).abs() <= successThreshold) {
+      return '成功!';
+    } else {
+      return '失敗...';
+    }
+  }
+
+  void _showNumberKeyboard(BuildContext context) {
+    final TextEditingController _controller =
+        TextEditingController(text: _targetSeconds.toString());
+    final FocusNode _focusNode = FocusNode();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Container(
+            padding: EdgeInsets.all(16),
+            color: Colors.white,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    focusNode: _focusNode,
+                    keyboardType: TextInputType.numberWithOptions(
+                      decimal: false,
+                      signed: false,
+                    ),
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: '1〜59の数字を入力',
+                      hintStyle: TextStyle(
+                        fontSize: 18, // 修正箇所: フォントサイズを18に設定
+                      ),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    final int? newSeconds = int.tryParse(_controller.text);
+                    if (newSeconds != null &&
+                        newSeconds >= 1 &&
+                        newSeconds <= 59) {
+                      setState(() {
+                        _targetSeconds = newSeconds;
+                      });
+                      Navigator.of(context).pop();
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('1〜59の数字を入力してください'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 24,
+                    ),
+                  ),
+                  child: Stack(
+                    children: [
+                      Text(
+                        '変更',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          foreground: Paint()
+                            ..style = PaintingStyle.stroke
+                            ..strokeWidth = 0.5
+                            ..color = Colors.white,
+                        ),
+                      ),
+                      Text(
+                        '変更',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showPopupMenu(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16), // ダイアログの角丸
+          ),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8, // 幅を画面の80%に設定
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min, // 必要なサイズだけ確保
+              children: [
+                ListTile(
+                  title: const Text(
+                    '秒数変更',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop(); // ダイアログを閉じる
+                    _showNumberKeyboard(context); // 数字変更キーボードを呼び出し
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  title: const Text(
+                    '成績',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop(); // ダイアログを閉じる
+                    // 成績の処理をここに追加
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  title: const Text(
+                    '履歴',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop(); // ダイアログを閉じる
+                    // 履歴の処理をここに追加
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  title: const Text(
+                    'タイトル',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop(); // ダイアログを閉じる
+                    setState(() {
+                      _targetSeconds = 10; // 目標秒数を初期値に戻す
+                      _isTimerStopped = true; // タイマー停止状態に設定
+                      context.read<TimerState>().resetTimer(); // タイマーをリセット
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TimerStateの状態を取得
     var timerState = context.watch<TimerState>();
+    double elapsedSeconds = timerState.milliseconds / 1000;
+    String resultText = _getResultText(elapsedSeconds);
 
     return Scaffold(
       appBar: AppBar(
-        // アプリバーのタイトルを設定
-        title: Text('10秒チャレンジ'),
+        title: null,
+        centerTitle: true,
+        backgroundColor: Colors.black,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: Image.asset(
+              'assets/setting_icon.png', // カスタムアイコン
+              width: 24,
+              height: 24,
+            ),
+            onPressed: () => _showPopupMenu(context), // メソッド呼び出し
+          ),
+        ],
       ),
-      body: Center(
-        // 中央にUI要素を配置
+      body: Container(
+        color: Colors.black,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // 経過時間を秒単位で表示
-            Text(
-              '${(timerState.milliseconds / 1000).toStringAsFixed(2)} 秒',
-              style: TextStyle(fontSize: 48), // 大きな文字サイズ
+            OutlineText(
+              text: '目指せジャスト',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
-            SizedBox(height: 20), // スペースを追加
-            // タイマーの開始/停止ボタン
-            ElevatedButton(
-              onPressed: timerState.isRunning
-                  ? timerState.stopTimer // タイマーが動作中なら停止
-                  : timerState.startTimer, // タイマーが停止中なら開始
-              child: Text(timerState.isRunning ? 'ストップ' : 'スタート'),
+            SizedBox(height: 10),
+            OutlineText(
+              text: '$_targetSeconds秒',
+              fontSize: 36,
+              fontWeight: FontWeight.bold,
             ),
-            SizedBox(height: 20), // スペースを追加
-            // タイマーのリセットボタン
-            ElevatedButton(
-              onPressed: timerState.resetTimer, // リセットを呼び出す
-              child: Text('リセット'),
+            SizedBox(height: 10),
+            OutlineText(
+              text: resultText,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+            SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ...((timerState.milliseconds / 1000)
+                    .toStringAsFixed(2)
+                    .padLeft(5, '0')
+                    .split('')
+                    .map((char) {
+                  return Container(
+                    width: 35,
+                    alignment: Alignment.center,
+                    child: Text(
+                      char,
+                      style: TextStyle(
+                        fontSize: 60,
+                        color: _isTimeVisible ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'monospace',
+                      ),
+                    ),
+                  );
+                }).toList()),
+                SizedBox(width: 10),
+                Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    '秒',
+                    style: TextStyle(
+                      fontSize: 50,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 40),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      timerState.resetTimer();
+                      setState(() {
+                        _isTimerStopped = true;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    child: OutlineText(
+                      text: 'リセット',
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (timerState.isRunning) {
+                        timerState.stopTimer();
+                        setState(() {
+                          _isTimerStopped = true;
+                        });
+                      } else {
+                        timerState.startTimer();
+                        setState(() {
+                          _isTimerStopped = false;
+                        });
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    child: OutlineText(
+                      text: timerState.isRunning ? 'ストップ' : 'スタート',
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 30),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _isTimeVisible = !_isTimeVisible;
+                });
+              },
+              child: OutlineText(
+                text: _isTimeVisible ? '秒数を表示しない' : '秒数を表示する',
+                fontSize: 20,
+                fontWeight: FontWeight.normal,
+              ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class OutlineText extends StatelessWidget {
+  final String text;
+  final double fontSize;
+  final FontWeight fontWeight;
+
+  const OutlineText({
+    required this.text,
+    required this.fontSize,
+    this.fontWeight = FontWeight.normal,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+            foreground: Paint()
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 2
+              ..color = Colors.white,
+          ),
+        ),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+            color: Colors.white,
+          ),
+        ),
+      ],
     );
   }
 }

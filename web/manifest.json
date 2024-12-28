@@ -1,6 +1,6 @@
 {
-    "name": "10秒チャレンジ",
-    "short_name": "10秒チャレンジ",
+    "name": "ジャストを目指せ",
+    "short_name": "ジャストを目指せ",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
