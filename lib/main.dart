@@ -339,19 +339,31 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            OutlineText(
-              text: '目指せジャスト',
-              fontSize: 20,
+            Text(
+              '目指せジャスト',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 10),
-            OutlineText(
-              text: '$_targetSeconds秒',
-              fontSize: 36,
+            Text(
+              '$_targetSeconds秒',
+              style: TextStyle(
+                fontSize: 36,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 10),
-            OutlineText(
-              text: resultText,
-              fontSize: 30,
+            Text(
+              resultText,
+              style: TextStyle(
+                fontSize: 30,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             SizedBox(height: 30),
             Row(
@@ -363,7 +375,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     .split('')
                     .map((char) {
                   return Container(
-                    width: 35,
+                    width: 50,
                     alignment: Alignment.center,
                     child: Text(
                       char,
@@ -372,7 +384,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: _isTimeVisible ? Colors.white : Colors.black,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'monospace',
-                        letterSpacing: 5.0, // 文字間隔を広げる
+                        letterSpacing: 7.0, // 文字間隔を広げる
                       ),
                     ),
                   );
@@ -383,7 +395,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text(
                     '秒',
                     style: TextStyle(
-                      fontSize: 50,
+                      fontSize: 40,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -411,9 +423,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       padding: EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: OutlineText(
-                      text: 'リセット',
-                      fontSize: 20,
+                    child: Text(
+                      'リセット',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -442,10 +458,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       padding: EdgeInsets.symmetric(vertical: 12),
                     ),
-                    child: OutlineText(
-                      text: timerState.isRunning ? 'ストップ' : 'スタート',
+                    child: Text(
+                      timerState.isRunning ? 'ストップ' : 'スタート',
                       key: const Key('startButtonText'),
-                      fontSize: 20,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -470,46 +490,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class OutlineText extends StatelessWidget {
-  final String text;
-  final double fontSize;
-  final FontWeight fontWeight;
-
-  const OutlineText({
-    Key? key,
-    required this.text,
-    required this.fontSize,
-    this.fontWeight = FontWeight.normal,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: fontSize,
-            fontWeight: fontWeight,
-            foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 2
-              ..color = Colors.white,
-          ),
-        ),
-        Text(
-          text,
-          style: TextStyle(
-            fontSize: fontSize,
-            fontWeight: fontWeight,
-            color: Colors.white,
-          ),
-        ),
-      ],
     );
   }
 }
