@@ -1,9 +1,11 @@
-import 'package:ten_second_challenge/performance_page.dart';
-import 'package:ten_second_challenge/log_page.dart'; // 修正: LogPageをインポート
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/scheduler.dart'; // Tickerを使用するためにインポート
+import 'package:ten_second_challenge/performance_page.dart';
+import 'package:ten_second_challenge/log_page.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:ten_second_challenge/main.dart'; // TimerStateクラスをインポート
 
 void main() {
   runApp(MyApp());
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
 }
 
 class TimerState extends ChangeNotifier {
-  Timer? _timer;
+  late Ticker _ticker;
   int _milliseconds = 0;
   bool _isRunning = false;
 
@@ -42,26 +44,29 @@ class TimerState extends ChangeNotifier {
   int get milliseconds => _milliseconds;
   bool get isRunning => _isRunning;
 
+  // 成績データのゲッター
   int get totalPlays => _totalPlays;
   int get totalPerfect => _totalPerfect;
   int get totalSuccess => _totalSuccess;
   int get totalFails => _totalFails;
 
+  // 履歴データのゲッター
   List<Map<String, String>> get logs => _logs;
 
   void startTimer() {
     if (_isRunning) return;
     _isRunning = true;
-    _timer = Timer.periodic(Duration(milliseconds: 10), (timer) {
-      _milliseconds += 10;
+    _ticker = Ticker((elapsed) {
+      _milliseconds = (elapsed.inMilliseconds ~/ 10) * 10; // 10ms 単位で更新
       notifyListeners();
     });
+    _ticker.start();
   }
 
   void stopTimer(int targetSeconds) {
     if (!_isRunning) return;
     _isRunning = false;
-    _timer?.cancel();
+    _ticker.stop();
 
     double elapsedSeconds = _milliseconds / 1000.0;
     _totalPlays++;
@@ -96,7 +101,6 @@ class TimerState extends ChangeNotifier {
 
   void resetTimer() {
     _isRunning = false;
-    _timer?.cancel();
     _milliseconds = 0;
     notifyListeners();
   }
@@ -127,6 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  // 秒数変更用のキーボードを表示する
   void _showNumberKeyboard(BuildContext context) {
     final TextEditingController _controller =
         TextEditingController(text: _targetSeconds.toString());
@@ -202,28 +207,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       horizontal: 24,
                     ),
                   ),
-                  child: Stack(
-                    children: [
-                      Text(
-                        '変更',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          foreground: Paint()
-                            ..style = PaintingStyle.stroke
-                            ..strokeWidth = 0.5
-                            ..color = Colors.white,
-                        ),
-                      ),
-                      Text(
-                        '変更',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    '変更',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],
@@ -234,6 +224,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  // ポップアップメニューの表示
   void _showPopupMenu(BuildContext context) {
     showDialog(
       context: context,
@@ -329,11 +320,11 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             icon: Image.asset(
-              'assets/setting_icon.png', // カスタムアイコン
+              'assets/setting_icon.png', // カスタムアイコン画像を設定
               width: 24,
               height: 24,
             ),
-            onPressed: () => _showPopupMenu(context), // メソッド呼び出し
+            onPressed: () => _showPopupMenu(context), // ポップアップメニューを呼び出し
           ),
         ],
       ),
@@ -402,7 +393,7 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center, // ボタンを中央に配置
               children: [
                 SizedBox(
-                  width: 150, // 横幅を適切に設定
+                  width: 150,
                   child: ElevatedButton(
                     onPressed: () {
                       timerState.resetTimer();
@@ -415,18 +406,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      padding: EdgeInsets.symmetric(vertical: 12), // ボタンの縦幅を設定
+                      padding: EdgeInsets.symmetric(vertical: 12),
                     ),
                     child: OutlineText(
                       text: 'リセット',
-                      fontSize: 20, // フォントサイズを調整
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                SizedBox(width: 16), // ボタン間のスペース
+                SizedBox(width: 16),
                 SizedBox(
-                  width: 150, // 横幅を適切に設定
+                  width: 150,
                   child: ElevatedButton(
                     key: const Key('startButton'),
                     onPressed: () {
@@ -447,12 +438,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      padding: EdgeInsets.symmetric(vertical: 12), // ボタンの縦幅を設定
+                      padding: EdgeInsets.symmetric(vertical: 12),
                     ),
                     child: OutlineText(
                       text: timerState.isRunning ? 'ストップ' : 'スタート',
                       key: const Key('startButtonText'),
-                      fontSize: 20, // フォントサイズを調整
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

@@ -2,7 +2,7 @@
     package="com.example.ten_second_challenge">
 
     <application
-        android:label="@string/app_name"
+        android:label="目指せベスト"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name="io.flutter.embedding.android.FlutterActivity"
