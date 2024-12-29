@@ -8,6 +8,11 @@ import 'package:flutter/services.dart';
 import 'package:ten_second_challenge/main.dart'; // TimerStateクラスをインポート
 
 void main() {
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp, // 縦向き
+    DeviceOrientation.portraitDown, // 反転縦向き（オプション）
+  ]);
+
   runApp(MyApp());
 }
 
@@ -337,19 +342,16 @@ class _MyHomePageState extends State<MyHomePage> {
             OutlineText(
               text: '目指せジャスト',
               fontSize: 20,
-              fontWeight: FontWeight.bold,
             ),
             SizedBox(height: 10),
             OutlineText(
               text: '$_targetSeconds秒',
               fontSize: 36,
-              fontWeight: FontWeight.bold,
             ),
             SizedBox(height: 10),
             OutlineText(
               text: resultText,
               fontSize: 30,
-              fontWeight: FontWeight.bold,
             ),
             SizedBox(height: 30),
             Row(
@@ -370,6 +372,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: _isTimeVisible ? Colors.white : Colors.black,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'monospace',
+                        letterSpacing: 5.0, // 文字間隔を広げる
                       ),
                     ),
                   );
@@ -411,7 +414,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: OutlineText(
                       text: 'リセット',
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -444,7 +446,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       text: timerState.isRunning ? 'ストップ' : 'スタート',
                       key: const Key('startButtonText'),
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -457,10 +458,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   _isTimeVisible = !_isTimeVisible;
                 });
               },
-              child: OutlineText(
-                text: _isTimeVisible ? '秒数を表示しない' : '秒数を表示する',
-                fontSize: 20,
-                fontWeight: FontWeight.normal,
+              child: Text(
+                _isTimeVisible ? '秒数を表示しない' : '秒数を表示する',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.normal,
+                ),
               ),
             ),
           ],
