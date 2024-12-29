@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'main.dart'; // TimerState を使用するためにインポート
+import 'package:ten_second_challenge/main.dart'; // TimerState を使用するためにインポート
 
 class PerformancePage extends StatelessWidget {
   @override

@@ -1,29 +1,50 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ten_second_challenge/main.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:ten_second_challenge/main.dart'; // 修正: main.dartをインポート
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('TimerState Tests', () {
+    test('startTimer starts the timer correctly', () async {
+      final timerState = TimerState(); // 変更: main.dartからインポートしたTimerStateを使用
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      // startTimerの呼び出し
+      timerState.startTimer();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      // startTimerが呼ばれると、isRunningがtrueに変わることを確認
+      expect(timerState.isRunning, true);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      // タイマーの更新が正常に行われていることを確認
+      await Future.delayed(Duration(milliseconds: 100));
+      expect(timerState.milliseconds, greaterThan(0));
+    });
+
+    test('stopTimer stops the timer correctly', () async {
+      final timerState = TimerState();
+
+      // タイマーを開始
+      timerState.startTimer();
+
+      // タイマーを停止
+      timerState.stopTimer(10);
+
+      // stopTimerが呼ばれると、isRunningがfalseに変わることを確認
+      expect(timerState.isRunning, false);
+    });
+
+    test('resetTimer resets the timer correctly', () async {
+      final timerState = TimerState();
+
+      // タイマーを開始
+      timerState.startTimer();
+
+      // 100ms後にリセット
+      await Future.delayed(Duration(milliseconds: 100));
+      timerState.resetTimer();
+
+      // リセット後、タイマーが初期状態に戻っていることを確認
+      expect(timerState.isRunning, false);
+      expect(timerState.milliseconds, 0);
+    });
   });
 }

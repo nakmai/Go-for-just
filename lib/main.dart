@@ -1,4 +1,5 @@
-import 'package:namer_app/performance_page.dart';
+import 'package:ten_second_challenge/performance_page.dart';
+import 'package:ten_second_challenge/log_page.dart'; // 修正: LogPageをインポート
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
@@ -9,12 +10,14 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => TimerState(),
       child: MaterialApp(
-        title: '目指せベスト',
+        title: '目指せジャスト',
         theme: ThemeData(),
         home: MyHomePage(),
       ),
@@ -33,6 +36,9 @@ class TimerState extends ChangeNotifier {
   int _totalSuccess = 0;
   int _totalFails = 0;
 
+  // 履歴データ
+  final List<Map<String, String>> _logs = [];
+
   int get milliseconds => _milliseconds;
   bool get isRunning => _isRunning;
 
@@ -40,6 +46,8 @@ class TimerState extends ChangeNotifier {
   int get totalPerfect => _totalPerfect;
   int get totalSuccess => _totalSuccess;
   int get totalFails => _totalFails;
+
+  List<Map<String, String>> get logs => _logs;
 
   void startTimer() {
     if (_isRunning) return;
@@ -56,18 +64,31 @@ class TimerState extends ChangeNotifier {
     _timer?.cancel();
 
     double elapsedSeconds = _milliseconds / 1000.0;
-    _totalPlays++; // 総プレイ回数を増加
+    _totalPlays++;
 
     // 成績の判定
     const successThreshold = 0.15;
     const perfectThreshold = 0.01;
 
+    String result;
     if ((elapsedSeconds - targetSeconds).abs() <= perfectThreshold) {
       _totalPerfect++;
+      result = '大成功';
     } else if ((elapsedSeconds - targetSeconds).abs() <= successThreshold) {
       _totalSuccess++;
+      result = '成功';
     } else {
       _totalFails++;
+      result = '失敗';
+    }
+
+    // 履歴を追加
+    _logs.insert(0, {
+      "time": elapsedSeconds.toStringAsFixed(2),
+      "result": result,
+    });
+    if (_logs.length > 10) {
+      _logs.removeLast();
     }
 
     notifyListeners();
@@ -263,6 +284,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   onTap: () {
                     Navigator.of(context).pop(); // ダイアログを閉じる
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LogPage()),
+                    );
                   },
                 ),
                 const Divider(),
@@ -400,6 +425,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
+                    key: const Key('startButton'),
                     onPressed: () {
                       if (timerState.isRunning) {
                         timerState.stopTimer(_targetSeconds);
@@ -422,6 +448,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     child: OutlineText(
                       text: timerState.isRunning ? 'ストップ' : 'スタート',
+                      key: const Key('startButtonText'),
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -454,11 +481,13 @@ class OutlineText extends StatelessWidget {
   final double fontSize;
   final FontWeight fontWeight;
 
+  // key を追加
   const OutlineText({
+    Key? key,
     required this.text,
     required this.fontSize,
     this.fontWeight = FontWeight.normal,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
