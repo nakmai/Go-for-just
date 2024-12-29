@@ -143,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
         return Padding(
           padding: MediaQuery.of(context).viewInsets,
           child: Container(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(12), // 縦幅を狭くする
             color: Colors.white,
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -166,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     decoration: InputDecoration(
                       hintText: '1〜59の数字を入力',
                       hintStyle: TextStyle(
-                        fontSize: 18, // 修正箇所: フォントサイズを18に設定
+                        fontSize: 18,
                       ),
                       border: OutlineInputBorder(),
                     ),
@@ -198,7 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     padding: EdgeInsets.symmetric(
-                      vertical: 16,
+                      vertical: 12,
                       horizontal: 24,
                     ),
                   ),
@@ -399,8 +399,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             SizedBox(height: 40),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center, // ボタンを中央に配置
               children: [
-                Expanded(
+                SizedBox(
+                  width: 150, // 横幅を適切に設定
                   child: ElevatedButton(
                     onPressed: () {
                       timerState.resetTimer();
@@ -413,17 +415,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                      padding: EdgeInsets.symmetric(vertical: 12), // ボタンの縦幅を設定
                     ),
                     child: OutlineText(
                       text: 'リセット',
-                      fontSize: 24,
+                      fontSize: 20, // フォントサイズを調整
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                SizedBox(width: 16),
-                Expanded(
+                SizedBox(width: 16), // ボタン間のスペース
+                SizedBox(
+                  width: 150, // 横幅を適切に設定
                   child: ElevatedButton(
                     key: const Key('startButton'),
                     onPressed: () {
@@ -444,12 +447,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                      padding: EdgeInsets.symmetric(vertical: 12), // ボタンの縦幅を設定
                     ),
                     child: OutlineText(
                       text: timerState.isRunning ? 'ストップ' : 'スタート',
                       key: const Key('startButtonText'),
-                      fontSize: 24,
+                      fontSize: 20, // フォントサイズを調整
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -481,7 +484,6 @@ class OutlineText extends StatelessWidget {
   final double fontSize;
   final FontWeight fontWeight;
 
-  // key を追加
   const OutlineText({
     Key? key,
     required this.text,
