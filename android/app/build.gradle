@@ -4,16 +4,33 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+def keyProperties = new Properties()
+def keyPropertiesFile = rootProject.file("key.properties")
+if (keyPropertiesFile.exists()) {
+    keyProperties.load(new FileInputStream(keyPropertiesFile))
+} else {
+    throw new FileNotFoundException("key.properties file not found: " + keyPropertiesFile.getPath())
+}
+
 android {
-    namespace = "com.example.ten_second_challenge"
+    namespace = "com.ten_second_challenge"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.ten_second_challenge"
+        applicationId = "com.ten_second_challenge"
         minSdk = 21
         targetSdk = 34
         versionCode = 1
         versionName = "1.0.0"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(keyProperties['storeFile'])
+            storePassword keyProperties['storePassword']
+            keyAlias keyProperties['keyAlias']
+            keyPassword keyProperties['keyPassword']
+        }
     }
 
     buildTypes {
@@ -21,6 +38,7 @@ android {
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 

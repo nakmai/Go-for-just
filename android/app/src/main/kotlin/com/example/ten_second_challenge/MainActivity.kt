@@ -1,4 +1,4 @@
-package com.example.ten_second_challenge
+package com.ten_second_challenge
 
 import io.flutter.embedding.android.FlutterActivity
 

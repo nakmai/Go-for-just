@@ -12,6 +12,7 @@ key.properties
 **/*.keystore
 **/*.jks
 
+/android/app/key.jks
 
 
 
