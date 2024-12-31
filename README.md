@@ -1,18 +1,30 @@
-# ten_second_challenge
+## 🎯 目指せジャスト - タイミングチャレンジゲーム 🎯
 
-A new Flutter project.
+「目指せジャスト」は、あなたのタイミング感覚を試すシンプルなゲームです！⏱️
 
-## Getting Started
+### ゲームの特徴
 
-This project is a starting point for a Flutter application.
+- 🕹️ **シンプルな操作**: スタートボタンを押して、目標秒数に合わせてストップボタンを押すだけ！
+- 🎉 **成績表示**: あなたのプレイ回数、大成功、成功、失敗の回数を記録します。成績はいつでも確認でき、自己ベストを目指すモチベーションになります。
+- 📈 **履歴機能**: 過去のプレイ結果を確認して、どれだけ上達したかをチェックしましょう。履歴は最大10件まで保存されます。
+- ⏲️ **秒数変更機能**: 目標秒数を1秒から59秒の間で自由に設定できます。
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 遊び方
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. スタートボタンを押してタイマーを開始します。
+2. 目標秒数に近づいたらストップボタンを押します。
+3. 結果を確認して、次のチャレンジに挑戦しましょう！
+
+### 成績の詳細
+
+- **大成功**: 目標秒数に対して±0.01秒以内
+- **成功**: 目標秒数に対して±0.15秒以内
+- **失敗**: それ以外
+
+### こんな方におすすめ
+
+- タイミング感覚を鍛えたい方
+-宴会などで簡単なゲームを探している方
 
   
