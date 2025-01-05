@@ -163,6 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         timerState.stopTimer(_targetSeconds);
                         setState(() {
                           _isTimerStopped = true;
+                          _isTimeVisible = true; // ストップ時に秒数を強制表示
                         });
                       } else {
                         timerState.startTimer();

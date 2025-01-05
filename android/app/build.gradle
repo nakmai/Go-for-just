@@ -20,8 +20,13 @@ android {
         applicationId = "com.ten_second_challenge"
         minSdk = 21
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 10
+        versionName = "10.0"
+        
+        // NDKのデバッグシンボルレベル設定をここに移動
+        ndk {
+            debugSymbolLevel 'FULL'
+        }
     }
 
     signingConfigs {
@@ -39,6 +44,11 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+
+            // NDK設定をbuildTypesにも追加することもできます（オプション）
+            ndk {
+                debugSymbolLevel 'FULL'  // 必要に応じてここにも追加
+            }
         }
     }
 
