@@ -163,6 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         timerState.stopTimer(_targetSeconds);
                         setState(() {
                           _isTimerStopped = true;
+                          _isTimeVisible = true; // ストップボタンを押した時に秒数を表示
                         });
                       } else {
                         timerState.startTimer();
@@ -172,7 +173,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: timerState.isRunning
+                          ? Colors.green
+                          : Colors.green, // ストップボタンを青色、スタートボタンを緑色に変更
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
