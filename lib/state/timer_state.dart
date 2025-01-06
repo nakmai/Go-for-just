@@ -114,6 +114,7 @@ class TimerState extends ChangeNotifier {
   void resetTimer() {
     _isRunning = false;
     _milliseconds = 0;
+    _ticker.stop(); // タイマーが稼働中でも停止
     notifyListeners();
   }
 
