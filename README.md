@@ -5,11 +5,13 @@ iOS版URL:https://apps.apple.com/app/%E7%9B%AE%E6%8C%87%E3%81%9B%E3%82%B8%E3%83%
 Android版:現在申請中
 
 <br>
+<br>
+<br>
 「目指せジャスト」は、あなたのタイミング感覚を試すシンプルなゲームです！⏱️
 
 
 <br>
-### ゲームの特徴
+## ゲームの特徴
 
 - 🕹️ **シンプルな操作**: スタートボタンを押して、目標秒数に合わせてストップボタンを押すだけ！
 [![Image from Gyazo](https://i.gyazo.com/29e457d9d6f217047bb780a65c342d0d.gif)](https://gyazo.com/29e457d9d6f217047bb780a65c342d0d)
@@ -26,7 +28,7 @@ Android版:現在申請中
 [![Image from Gyazo](https://i.gyazo.com/873bf7c97ecc4d92f685c86bf9d0a492.gif)](https://gyazo.com/873bf7c97ecc4d92f685c86bf9d0a492)
 
 <br>
-### 遊び方
+## 遊び方
 
 1. スタートボタンを押してタイマーを開始します。
 
@@ -34,7 +36,7 @@ Android版:現在申請中
 3. 結果を確認して、次のチャレンジに挑戦しましょう！
 
 <br>
-### 成績の詳細
+## 成績の詳細
 
 - **大成功**: 目標秒数に対して±0.01秒以内
 - **成功**: 目標秒数に対して±0.15秒以内
@@ -47,7 +49,7 @@ Android版:現在申請中
 
 
 <br>
-### 画面遷移図
+## 画面遷移図
 https://www.figma.com/design/c4z3TQ1EA5FYrq5JOqQUOg/10%E7%A7%92%E3%83%81%E3%83%A3%E3%83%AC%E3%83%B3%E3%82%B8?node-id=0-1&p=f&t=Oxgvh32c0MmDIdVT-0
 
 
