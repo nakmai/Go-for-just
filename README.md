@@ -15,21 +15,21 @@ Android版:現在申請中
 ### ゲームの特徴
 
 - 🕹️ **シンプルな操作**: スタートボタンを押して、目標秒数に合わせてストップボタンを押すだけ！
-<br>
+
 [![Image from Gyazo](https://i.gyazo.com/29e457d9d6f217047bb780a65c342d0d.gif)](https://gyazo.com/29e457d9d6f217047bb780a65c342d0d)
 - 🎉 **成績表示**: あなたのプレイ回数、大成功、成功、失敗の回数を記録します。成績はいつでも確認でき、自己ベストを目指すモチベーションになります。
 [![Image from Gyazo](https://i.gyazo.com/19d4912b224e3c7c5d5391e75a8b1dda.gif)](https://gyazo.com/19d4912b224e3c7c5d5391e75a8b1dda)
 
 - 📈 **履歴機能**: 過去のプレイ結果を確認して、どれだけ上達したかをチェックしましょう。履歴は最大10件まで保存されます。
-<br>
+
 [![Image from Gyazo](https://i.gyazo.com/f40d3c1190fde80df46bce2af14d0db1.gif)](https://gyazo.com/f40d3c1190fde80df46bce2af14d0db1)
 
 - ⏲️ **秒数変更機能**: 目標秒数を1秒から59秒の間で自由に設定できます。
-<br>
+
 [![Image from Gyazo](https://i.gyazo.com/e8078e0ede949f1a79a676a32d41594d.gif)](https://gyazo.com/e8078e0ede949f1a79a676a32d41594d)
 
 - ⚠️　**履歴・成績削除機能**: 履歴・成績を一括削除いたします。
-<br>
+
 [![Image from Gyazo](https://i.gyazo.com/873bf7c97ecc4d92f685c86bf9d0a492.gif)](https://gyazo.com/873bf7c97ecc4d92f685c86bf9d0a492)
 
 <br>
