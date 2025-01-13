@@ -17,6 +17,8 @@
 - ⏲️ **秒数変更機能**: 目標秒数を1秒から59秒の間で自由に設定できます。
 [![Image from Gyazo](https://i.gyazo.com/e8078e0ede949f1a79a676a32d41594d.gif)](https://gyazo.com/e8078e0ede949f1a79a676a32d41594d)
 
+- ⚠️　**履歴・成績削除機能**: 履歴・成績を一括削除いたします。
+[![Image from Gyazo](https://i.gyazo.com/873bf7c97ecc4d92f685c86bf9d0a492.gif)](https://gyazo.com/873bf7c97ecc4d92f685c86bf9d0a492)
 
 <br>
 ### 遊び方
